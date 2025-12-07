@@ -1,68 +1,65 @@
-import React, { useState } from "react";
-import "./App.css";
+import React, { useState } from 'react';
+import './App.css';
 
 function App() {
   const [isOpen, setIsOpen] = useState(false);
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
-  const [dob, setDob] = useState("");
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
+  const [dob, setDob] = useState('');
 
   const resetForm = () => {
-    setUsername("");
-    setEmail("");
-    setPhone("");
-    setDob("");
+    setUsername('');
+    setEmail('');
+    setPhone('');
+    setDob('');
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    if (email && !email.includes('@')) {
+      alert('Invalid email. Please check your email address.');
+      return;
+    }
+
+    if (phone && (phone.length !== 10 || !/^\d+$/.test(phone))) {
+      alert('Invalid phone number. Please enter a 10-digit phone number.');
+      return;
+    }
+    if (dob) {
+      const selectedDate = new Date(dob);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      if (selectedDate > today) {
+        alert('Invalid date of birth. Please select a valid date.');
+        return;
+      }
+    }
     if (!username || !email || !phone || !dob) {
-      alert("Please fill out all fields.");
+      alert('Please fill out all fields.');
       return;
     }
 
-    if (!email.includes("@")) {
-      alert("Invalid email. Please check your email address.");
-      return;
-    }
-
-    if (phone.length !== 10 || !/^\d+$/.test(phone)) {
-      alert("Invalid phone number. Please enter a 10-digit phone number.");
-      return;
-    }
-
-    const selectedDate = new Date(dob);
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-
-    if (selectedDate > today) {
-      alert("Invalid date of birth. Please select a valid date.");
-      return;
-    }
-
+    // Everything valid - close modal
     resetForm();
     setIsOpen(false);
   };
 
   const closeOnOutsideClick = (e) => {
-    if (e.target.className === "modal") {
+    if (e.target.className === 'modal') {
       setIsOpen(false);
     }
   };
 
   return (
     <div className="App">
-      {/* Header */}
       <h1 className="main-title">User Details Modal</h1>
 
-      {/* Initial Render Button */}
       <div className="center-container">
         <button onClick={() => setIsOpen(true)}>Open Form</button>
       </div>
 
-      {/* Modal */}
       {isOpen && (
         <div className="modal" onClick={closeOnOutsideClick}>
           <div className="modal-content">
